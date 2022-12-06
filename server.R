@@ -31,7 +31,6 @@ headings <- headings[1:length(df_long)]
 headings <- headings %>% map(~ strsplit(., split = '>|<') %>%
                                unlist() %>% .[3] %>% str_trim()) %>% unlist() # format headings
 
-#all_squads <- df_long[[1]] %>% pull(Squad)
 all_vis <- c(
   'GF vs. xG',
   'npxG vs. xGA',
@@ -91,6 +90,7 @@ function(input, output){
       unlist() %>% head(1) # define y variable for ggplot
     var_x <- strsplit(as.character(input$plotSelect), ' vs. ') %>%
       unlist() %>% tail(1) # define x variable for ggplot
+    
     if (input$plotSelect %nin% c('GF vs. xG', 'GA vs. PSxG')){
       p <- ggplot(react_data(), aes(x = UQ(sym(var_x)),
                                     y = UQ(sym(var_y)))) + 
