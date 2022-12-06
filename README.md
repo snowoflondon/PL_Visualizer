@@ -13,6 +13,8 @@
 
 Selecting *Team Selection* from the drop-down menu highlights the squad in the scatterplot.
 
+Changing user choices from the drop-down menus automatically refreshes the data table and the visualization.
+
 ## R sessionInfo()
 
 R version 4.0.5 (2021-03-31)
