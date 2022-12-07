@@ -27,6 +27,17 @@ The program currently does not support goalkeepers' stats.
 
 Caveat: the program currently does not support players who have played for multiple clubs (e.g., Daniel James have played for both Leeds and Fulham in the current season). 
 
+## R dependencies
+* `shiny`
+* `rvest`
+* `xml2`
+* `dplyr`
+* `stringr`
+* `DT`
+* `shinythemes`
+* `RColorBrewer`
+* `ggrepel`
+
 ## R sessionInfo()
 
 R version 4.0.5 (2021-03-31)
@@ -37,17 +48,21 @@ Matrix products: default
 LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
 
 locale:
+
 [1] en_CA.UTF-8/en_CA.UTF-8/en_CA.UTF-8/C/en_CA.UTF-8/en_CA.UTF-8
 
 attached base packages:
+
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
+
  [1] DT_0.26           ggrepel_0.9.1     rvest_1.0.3       forcats_0.5.1     stringr_1.4.0     dplyr_1.0.5       purrr_0.3.4      
  [8] readr_1.4.0       tidyr_1.1.3       tibble_3.1.1      ggplot2_3.3.3     tidyverse_1.3.1   shinythemes_1.2.0 rsconnect_0.8.25 
 [15] shiny_1.6.0      
 
 loaded via a namespace (and not attached):
+
  [1] Rcpp_1.0.6          lubridate_1.7.10    packrat_0.7.0       assertthat_0.2.1    digest_0.6.27       utf8_1.2.1         
  [7] mime_0.10           R6_2.5.0            cellranger_1.1.0    backports_1.2.1     reprex_2.0.0        httr_1.4.2         
 [13] pillar_1.6.0        rlang_1.0.6         curl_4.3            readxl_1.3.1        rstudioapi_0.13     jquerylib_0.1.4    
