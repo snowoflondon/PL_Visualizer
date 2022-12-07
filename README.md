@@ -33,6 +33,7 @@ Caveat: the program currently does not support players who have played for multi
 * `xml2`
 * `dplyr`
 * `stringr`
+* `purrr`
 * `DT`
 * `shinythemes`
 * `RColorBrewer`
