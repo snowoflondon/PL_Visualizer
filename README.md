@@ -21,7 +21,7 @@ Ticking the checkbox for 'Hide non-selected squad labels' de-clutters the plot b
 
 For **player stats**, the program draws 12 different individual statistics for the selected player and compares them to the league median for that player's position. These 12 statistics are: 
 
-*Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total passes attempted, Pass completion %, Shot creating actions, Tackles won, Tackles won %, Interceptions, and Clearances*. 
+*Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total passes attempted, Pass completion %, Shot creating actions, Tackles won, Tackles won %, Interceptions*, and *Clearances*. 
 
 The program currently does not support goalkeepers' stats.
 
