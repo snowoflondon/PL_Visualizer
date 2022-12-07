@@ -18,31 +18,56 @@ vis <- c(
 fluidPage(
   theme = shinytheme('flatly'),
   titlePanel('PL Visualizer'),
-  fluidRow(
-    column(width = 4,
-           verticalLayout(
-             selectInput(inputId = 'teamSelect',
-                         label = 'Team Selection',
-                         choices = as.list(squads),
-                         multiple = FALSE),
-             selectInput(inputId = 'plotSelect',
-                         label = 'Visualization',
-                         choices = as.list(vis),
-                         multiple = FALSE)
-           )),
-    column(width = 8,
-           DT::dataTableOutput(outputId = 'table'))
-  ),
-  fluidRow(
-    column(width = 12,
-           plotOutput(outputId = 'plot',
-                      height = '600px'))
-  ),
-  fluidRow(
-    column(width = 12,
-           verticalLayout(
-            textOutput(outputId = 'text'),
-            a(href = 'https://fbref.com/en/comps/9/Premier-League-Stats',
-              'Source FBRef page'))
-  ))
+  tabsetPanel(
+    tabPanel('Team Stats',
+      fluidRow(
+        column(width = 4,
+               verticalLayout(
+                 selectInput(inputId = 'teamSelect',
+                             label = 'Team Selection',
+                             choices = as.list(squads),
+                             multiple = FALSE),
+                 selectInput(inputId = 'plotSelect',
+                             label = 'Visualization',
+                             choices = as.list(vis),
+                             multiple = FALSE),
+                 checkboxInput(inputId = 'hideLabels',
+                               label = 'Hide non-selected squad labels',
+                               value = FALSE,
+                               width = '500px')
+               )),
+        column(width = 8,
+               DT::dataTableOutput(outputId = 'table'))
+      ),
+      fluidRow(
+        column(width = 12,
+               plotOutput(outputId = 'plot',
+                          height = '600px'))
+      ),
+      fluidRow(
+        column(width = 12,
+               verticalLayout(
+                textOutput(outputId = 'text'),
+                a(href = 'https://fbref.com/en/comps/9/Premier-League-Stats',
+                  'Source FBRef page'))
+      ))
+    ),
+    tabPanel('Player Stats',
+      fluidRow(
+        column(width = 4,
+               verticalLayout(
+                 textInput(inputId = 'playerSelect',
+                           label = 'Player Search',
+                           value = 'Harry Kane'),
+                 actionButton(inputId = 'searchSelect',
+                              label = 'Submit'),
+                 p('* Goalkeepers currently not supported!'),
+                 a(href = 'https://fbref.com/en/comps/9/stats/Premier-League-Stats',
+                   'All searchable players names here')
+               )),
+        column(width = 8,
+               plotOutput(outputId = 'playerPlot',
+                          height = '1200px'))
+      ))
+  )
 )
