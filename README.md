@@ -4,8 +4,9 @@
 `PL Visualizer` is a Shiny app aimed to visualize advanced team statistics from the Premier League. This app scrapes squad and individual player data from [Fbref](https://fbref.com/en/comps/9/Premier-League-Stats) using the R package `rvest`. The Shiny app can be accessed here: https://brianjmpark.shinyapps.io/pl_visualizer/
 
 ## Explanation
-`PL Visualizer` currently supports 2 main types of visualizations: Team stats and Player stats. 
-For team stats, there are currently 5 types of visualizations:
+`PL Visualizer` currently supports 2 main types of visualizations: **Team stats** and **Player stats**. 
+
+For **team stats**, there are currently 5 types of visualizations:
 * Goals scored vs. expected goals
 * Non-penalty expected goals vs. goals conceded
 * Goals conceded vs. shots on target against
@@ -18,7 +19,9 @@ Changing user choices from the drop-down menus automatically refreshes the data 
 
 Ticking the checkbox for 'Hide non-selected squad labels' de-clutters the plot by only highlighting the user-selected squad.
 
-For player stats, the program draws 12 different individual statistics for the selected player and compares them to the league median for that player's position. These 12 statistics are: Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total passes attempted, Pass completion %, Shot creating actions, Tackles won, Tackles won %, Interceptions, and Clearances. 
+For **player stats**, the program draws 12 different individual statistics for the selected player and compares them to the league median for that player's position. These 12 statistics are: 
+
+*Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total passes attempted, Pass completion %, Shot creating actions, Tackles won, Tackles won %, Interceptions, and Clearances*. 
 
 The program currently does not support goalkeepers' stats.
 
