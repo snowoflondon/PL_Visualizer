@@ -37,6 +37,7 @@ Caveat: the program currently does not support players who have played for multi
 * `DT`
 * `shinythemes`
 * `RColorBrewer`
+* `ggplot`
 * `ggrepel`
 
 ## R sessionInfo()
