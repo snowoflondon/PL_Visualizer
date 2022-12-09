@@ -86,30 +86,7 @@ pull_xml_table <- function(x){
     paste0(collapse = "") %>% read_html %>% xml_find_all("//table") %>% html_table
   df <- df[[1]]
   df <- clean_names(df)
-}
-
-df_players <- lapply(url_players, pull_xml_table)
-df_players <- df_players %>% lapply(function(x) x[,!duplicated(colnames(x))])
-key_stats <- c('Player', 'Pos', 'Gls', 'Sh', 'npxG', 
-               'Ast', 'xA', 'PrgDist', 'Att', 'Cmp%',
-               'SCA', 'TklW', 'Tkl%', 'Int', 'Clr')
-df_players <- df_players %>% lapply(function(x) x %>% select(any_of(key_stats)))
-df_players[-(1:2)] <- df_players[-(1:2)] %>% lapply(function(x) x %>%
-                                              select(-any_of(c('Sh', 'Att'))))
-df_players <- df_players %>% lapply(function(x) x %>% 
-                                      filter(Player != 'Player'))
-df_new <- df_players[[1]]
-for (i in 2:length(df_players)){
-  df_new <- df_new %>% inner_join(df_players[[i]])
-}
-df_new <- df_new[!duplicated(df_new$Player),]
-df_new <- df_new %>% 
-  mutate(Pos = strsplit(Pos, split = ',') %>% map(~ .[1]) %>% unlist())
-df_new <- df_new %>% filter(Pos != 'GK')
-df_new <- df_new %>% mutate(across(3:15, as.numeric))
-df_medians <- df_new %>% group_by(Pos) %>% 
-  summarise(across(3:14, function(x) median(x, na.rm = TRUE))) %>%
-  mutate(Player = 'League Median') %>% relocate(Player)                             
+}                       
                               
 # core server function
 function(input, output){
@@ -189,7 +166,29 @@ output$plot <- renderPlot({
   
     # server functions for player stats tab
   react_data2 <- eventReactive(input$searchSelect, {
-    df_new %>% filter(str_detect(Player, input$playerSelect)) %>% 
+    df_players <- lapply(url_players, pull_xml_table)
+    df_players <- df_players %>% lapply(function(x) x[,!duplicated(colnames(x))])
+    key_stats <- c('Player', 'Pos', 'Gls', 'Sh', 'npxG', 
+               'Ast', 'xA', 'PrgDist', 'Att', 'Cmp%',
+               'SCA', 'TklW', 'Tkl%', 'Int', 'Clr')
+    df_players <- df_players %>% lapply(function(x) x %>% select(any_of(key_stats)))
+    df_players[-(1:2)] <- df_players[-(1:2)] %>% lapply(function(x) x %>%
+                                              select(-any_of(c('Sh', 'Att'))))
+    df_players <- df_players %>% lapply(function(x) x %>% 
+                                      filter(Player != 'Player'))
+    df_new <- df_players[[1]]
+    for (i in 2:length(df_players)){
+      df_new <- df_new %>% inner_join(df_players[[i]])
+    }
+    df_new <- df_new[!duplicated(df_new$Player),]
+    df_new <- df_new %>% 
+      mutate(Pos = strsplit(Pos, split = ',') %>% map(~ .[1]) %>% unlist())
+    df_new <- df_new %>% filter(Pos != 'GK')
+    df_new <- df_new %>% mutate(across(3:15, as.numeric))
+    df_medians <- df_new %>% group_by(Pos) %>% 
+      summarise(across(3:14, function(x) median(x, na.rm = TRUE))) %>%
+      mutate(Player = 'League Median') %>% relocate(Player)      
+    df_new <- df_new %>% filter(str_detect(Player, input$playerSelect)) %>% 
       bind_rows(df_medians) %>% select(-Gls) %>%
       group_by(Pos) %>% filter(n() != 1) %>% ungroup()
   })
