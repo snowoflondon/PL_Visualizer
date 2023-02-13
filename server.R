@@ -233,4 +233,32 @@ output$plot <- renderPlot({
       scale_fill_brewer(palette = 'Set1')
     print(q)
   })
+                
+  react_data3 <- eventReactive(input$gkSelect, {
+    df_gk <- lapply(url_gk, pull_xml_table)
+    df_gk <- df_gk %>% lapply(function(x) x[,!duplicated(colnames(x))])
+    gk_key <- c('Player', 'GA', 'Save%', 'PSxG') # add more later
+    df_gk <- df_gk %>% lapply(function(x) x %>% select(any_of(gk_key)) %>%
+                                filter(Player != 'Player'))
+    df_gk2 <- df_gk[[1]] %>% inner_join(df_gk[[2]]) %>%
+      mutate(across(-1, as.numeric)) %>%
+      mutate(`PSxG - GA` = PSxG-GA)
+    return(df_gk2)
+  })
+  
+   output$gkPlot <- renderPlot({
+    q <- react_data3() %>% ggplot(aes(x = `PSxG - GA`, y = `Save%`)) +
+      geom_point(size = 6) +
+      geom_vline(xintercept = median(react_data3() %>% pull(`PSxG - GA`)),
+                 linetype = 'dashed') + 
+      geom_hline(yintercept = median(react_data3() %>% pull(`Save%`)), 
+                 linetype = 'dashed') + 
+      geom_label_repel(aes(label = Player)) + theme_bw() +
+      xlab('Post shot expected goals minus goals conceded') + 
+      ylab('Save percentage') +
+      theme(text = element_text(size = 14)) +
+      labs(title = 'PSxG-GA vs. Save%',
+           subtitle = 'Premier League Goalkeepers')
+    print(q)
+  })             
 }
