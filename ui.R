@@ -1,5 +1,6 @@
 library(shinythemes)
 library(shinycssloaders)
+library(tidyverse)
 
 squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
