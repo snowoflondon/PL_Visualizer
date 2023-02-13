@@ -15,7 +15,7 @@ clean_names <- function(x){
   x <- x[-1,]
   return(x)
 }
-df_long[-1] <- df_long[-1] %>% map(~ clean_names(.))
+df_long[-1] <- df_long[-1] %>% map(~ clean_names(.x))
 df_long <- df_long %>% lapply(function(x) x[,!duplicated(colnames(x))]) # remove per 90 stats
 df_long[[2]] <- df_long[[2]] %>% left_join(
   df_long[[1]] %>% select(Squad, xGA), by = 'Squad'
@@ -24,14 +24,14 @@ df_long[[1]] <- df_long[[1]] %>% select(-c(Rk, `Last 5`,
                                            Attendance, `Top Team Scorer`,
                                            Goalkeeper, Notes))
 
-df_long <- df_long %>% map(~ mutate(., across(2:ncol(.), as.numeric))) # identify numeric variables
+df_long <- df_long %>% map(~ mutate(., across(2:ncol(.x), as.numeric))) # identify numeric variables
 
 headings <- html %>% html_elements('h2') %>% as.character() # extract data table categories
 headings <- headings[!duplicated(headings)]
 headings <- headings[1:length(df_long)]
 
 headings <- headings %>% map(~ strsplit(., split = '>|<') %>%
-                               unlist() %>% .[3] %>% str_trim()) %>% unlist() # format headings
+                               unlist() %>% .x[3] %>% str_trim()) %>% unlist() # format headings
 
 all_vis <- c(
   'GF vs. xG',
