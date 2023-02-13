@@ -1,4 +1,5 @@
 library(shinythemes)
+library(shinycssloaders)
 
 squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
@@ -37,12 +38,14 @@ fluidPage(
                                width = '500px')
                )),
         column(width = 8,
-               DT::dataTableOutput(outputId = 'table'))
+               DT::dataTableOutput(outputId = 'table')) %>%
+                  withSpinner(color="#0dc5c1"))
       ),
       fluidRow(
         column(width = 12,
                plotOutput(outputId = 'plot',
-                          height = '600px'))
+                          height = '600px')) %>%
+                  withSpinner(color="#0dc5c1"))
       ),
       fluidRow(
         column(width = 12,
@@ -52,7 +55,7 @@ fluidPage(
                   'Source FBRef page'))
       ))
     ),
-    tabPanel('Player Stats',
+    tabPanel('Outfield Player Stats',
       fluidRow(
         column(width = 4,
                verticalLayout(
@@ -67,7 +70,7 @@ fluidPage(
                )),
         column(width = 8,
                plotOutput(outputId = 'playerPlot',
-                          height = '1200px'))
+                          height = '1200px') %>% withSpinner(color="#0dc5c1"))
       )),
      tabPanel('Goalkeeper Stats',
       fluidRow(
@@ -82,7 +85,7 @@ fluidPage(
                )),
         column(width = 8,
                plotOutput(outputId = 'gkPlot',
-                          height = '1200px'))
+                          height = '1200px') %>% withSpinner(color="#0dc5c1"))
       ))
   )
 )
