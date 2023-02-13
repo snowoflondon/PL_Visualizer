@@ -41,6 +41,7 @@ The **Goalkeeper stats** tab currently shows one visualization, which correspond
 * `RColorBrewer`
 * `ggplot`
 * `ggrepel`
+* `shinycssloaders`
 
 ## R sessionInfo()
 
