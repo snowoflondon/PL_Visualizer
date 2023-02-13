@@ -4,7 +4,7 @@
 `PL Visualizer` is a Shiny app aimed to visualize advanced team statistics from the Premier League. This app scrapes squad and individual player data from [Fbref](https://fbref.com/en/comps/9/Premier-League-Stats) using the R package `rvest`. The Shiny app can be accessed here: https://brianjmpark.shinyapps.io/pl_visualizer/
 
 ## Explanation
-`PL Visualizer` currently supports 2 main types of visualizations: **Team stats** and **Player stats**. 
+`PL Visualizer` currently supports 3 main types of visualizations: **Team stats**, **Outfield player stats**, and **Goalkeeper stats**. 
 
 For **team stats**, there are currently 5 types of visualizations:
 * Goals scored vs. expected goals
@@ -19,13 +19,15 @@ Changing user choices from the drop-down menus automatically refreshes the data 
 
 Ticking the checkbox for 'Hide non-selected squad labels' de-clutters the plot by only highlighting the user-selected squad.
 
-For **player stats**, the program draws 12 different individual statistics for the selected player and compares them to the league median for that player's position. These 12 statistics are: 
+For **Outfield player stats**, the program draws 12 different individual statistics for the selected player and compares them to the league median for that player's position. These 12 statistics are: 
 
 *Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total passes attempted, Pass completion %, Shot creating actions, Tackles won, Tackles won %, Interceptions*, and *Clearances*. 
 
-The program currently does not support goalkeepers' stats.
+Note this tab does not support or include goalkeepers.
 
-Caveat: the program currently does not support players who have played for multiple clubs (e.g., Daniel James have played for both Leeds and Fulham in the current season). 
+Caveat: the program currently does not support players who have played for multiple clubs (e.g., Daniel James have played for both Leeds and Fulham in the '21-'22 season). 
+
+The **Goalkeeper stats** tab currently shows one visualization, which corresponds to the 'post-shot expected goals minus goals allowed vs. save percentage' figure. 
 
 ## R dependencies
 * `shiny`
