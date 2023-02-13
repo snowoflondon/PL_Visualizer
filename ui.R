@@ -68,6 +68,21 @@ fluidPage(
         column(width = 8,
                plotOutput(outputId = 'playerPlot',
                           height = '1200px'))
+      )),
+     tabPanel('Goalkeeper Stats',
+      fluidRow(
+        column(width = 4,
+               verticalLayout(
+                 selectInput(inputId = 'gkSelect',
+                           label = 'Goalkeeper Search',
+                           choices = as.list(gk_stats),
+                           multiple = FALSE),
+                 a(href = 'https://fbref.com/en/comps/9/keepers/Premier-League-Stats',
+                   'All searchable player names here')
+               )),
+        column(width = 8,
+               plotOutput(outputId = 'gkPlot',
+                          height = '1200px'))
       ))
   )
 )
