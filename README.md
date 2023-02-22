@@ -44,7 +44,7 @@ The **Goalkeeper stats** tab currently shows one visualization, which correspond
 * `shinycssloaders`
 
 ## R sessionInfo()
-
+``` r
 R version 4.0.5 (2021-03-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Big Sur 11.2.3
@@ -78,4 +78,5 @@ loaded via a namespace (and not attached):
 [43] magrittr_2.0.1      scales_1.1.1        stringi_1.5.3       cli_3.1.0           cachem_1.0.4        farver_2.1.0       
 [49] fs_1.5.0            promises_1.2.0.1    xml2_1.3.2          bslib_0.4.0         ellipsis_0.3.1      generics_0.1.0     
 [55] vctrs_0.3.7         tools_4.0.5         glue_1.4.2          hms_1.0.0           crosstalk_1.1.1     fastmap_1.1.0      
-[61] yaml_2.2.1          colorspace_2.0-0    BiocManager_1.30.12 memoise_2.0.0       haven_2.4.1         sass_0.4.2 
+[61] yaml_2.2.1          colorspace_2.0-0    BiocManager_1.30.12 memoise_2.0.0       haven_2.4.1         sass_0.4.2
+```
