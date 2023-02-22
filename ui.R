@@ -1,6 +1,6 @@
 library(shinythemes)
 library(shinycssloaders)
-library(tidyverse)
+library(magrittr)
 
 squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
@@ -17,9 +17,11 @@ vis <- c(
   'npxG/Sh vs. Sh/90'
 )
 
+gk_stats <- c('PSxG - GA vs. SoTA vs. Save%') # add more later
+
 fluidPage(
-  theme = shinytheme('flatly'),
-  titlePanel('PL Visualizer'),
+  theme = shinytheme('journal'),
+  titlePanel('PL Visualizer by snowoflondon'),
   tabsetPanel(
     tabPanel('Team Stats',
       fluidRow(
@@ -39,14 +41,14 @@ fluidPage(
                                width = '500px')
                )),
         column(width = 8,
-               DT::dataTableOutput(outputId = 'table')) %>%
-                  withSpinner(color="#0dc5c1"))
+               DT::dataTableOutput(outputId = 'table') %>% 
+                 withSpinner(color="#0dc5c1"))
       ),
       fluidRow(
         column(width = 12,
                plotOutput(outputId = 'plot',
-                          height = '600px')) %>%
-                  withSpinner(color="#0dc5c1"))
+                          height = '600px') %>% 
+                 withSpinner(color="#0dc5c1"))
       ),
       fluidRow(
         column(width = 12,
@@ -54,7 +56,12 @@ fluidPage(
                 textOutput(outputId = 'text'),
                 a(href = 'https://fbref.com/en/comps/9/Premier-League-Stats',
                   'Source FBRef page'))
-      ))
+      )),
+      fluidRow(
+        column(width = 12,
+               a(href = 'https://github.com/snowoflondon/PL_Visualizer',
+                 'Source code'))
+      )
     ),
     tabPanel('Outfield Player Stats',
       fluidRow(
@@ -63,17 +70,20 @@ fluidPage(
                  textInput(inputId = 'playerSelect',
                            label = 'Player Search',
                            value = 'Harry Kane'),
+                 checkboxInput(inputId = 'showLabelPlayers',
+                               label = 'Show percentile labels',
+                               value = FALSE),
                  actionButton(inputId = 'searchSelect',
                               label = 'Submit'),
                  p('* Goalkeepers currently not supported!'),
                  a(href = 'https://fbref.com/en/comps/9/stats/Premier-League-Stats',
-                   'All searchable players names here')
+                   'All searchable player names here')
                )),
         column(width = 8,
                plotOutput(outputId = 'playerPlot',
                           height = '1200px') %>% withSpinner(color="#0dc5c1"))
       )),
-     tabPanel('Goalkeeper Stats',
+    tabPanel('Goalkeeper Stats',
       fluidRow(
         column(width = 4,
                verticalLayout(
