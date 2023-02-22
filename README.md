@@ -19,9 +19,9 @@ Changing user choices from the drop-down menus automatically refreshes the data 
 
 Ticking the checkbox for 'Hide non-selected squad labels' de-clutters the plot by only highlighting the user-selected squad.
 
-For **Outfield player stats**, the program draws 12 different individual statistics for the selected player and compares them to the league median for that player's position. These 12 statistics are: 
+For **Outfield player stats**, the program draws 17 different individual statistics for the selected player and calculates the percentile against other players in the same position. These 17 statistics are: 
 
-*Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total passes attempted, Pass completion %, Shot creating actions, Tackles won, Tackles won %, Interceptions*, and *Clearances*. 
+*Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total distance, Total passes attempted, Pass completion %, Progressive passes, Passes into the penalty area, Goal creating actions, Shot creating actions, Tackles won, Tackles won %, Interceptions*, and *Clearances*. 
 
 Note this tab does not support or include goalkeepers.
 
