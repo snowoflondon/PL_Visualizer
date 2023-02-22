@@ -5,18 +5,17 @@ library(DT)
 library(xml2)
 library(RColorBrewer)
 
-# fetch data from fbref
 url <- 'https://fbref.com/en/comps/9/Premier-League-Stats'
 html <- read_html(url)
-df_long <- html %>% html_elements('table') %>% html_table() # make a list of data tables
-df_long <- df_long[seq(1, length(df_long), 2)] # remove duplicate tables
+df_long <- html %>% html_elements('table') %>% html_table()
+df_long <- df_long[seq(1, length(df_long), 2)]
 clean_names <- function(x){
   names(x) <- x[1,]
   x <- x[-1,]
   return(x)
 }
 df_long[-1] <- df_long[-1] %>% map(~ clean_names(.))
-df_long <- df_long %>% lapply(function(x) x[,!duplicated(colnames(x))]) # remove per 90 stats
+df_long <- df_long %>% lapply(function(x) x[,!duplicated(colnames(x))])
 df_long[[2]] <- df_long[[2]] %>% left_join(
   df_long[[1]] %>% select(Squad, xGA), by = 'Squad'
 )
@@ -24,23 +23,23 @@ df_long[[1]] <- df_long[[1]] %>% select(-c(Rk, `Last 5`,
                                            Attendance, `Top Team Scorer`,
                                            Goalkeeper, Notes))
 
-df_long <- df_long %>% map(~ mutate(., across(2:ncol(.), as.numeric))) # identify numeric variables
+df_long <- df_long %>% map(~ mutate(., across(2:ncol(.), as.numeric)))
 
-headings <- html %>% html_elements('h2') %>% as.character() # extract data table categories
+headings <- html %>% html_elements('h2') %>% as.character()
 headings <- headings[!duplicated(headings)]
 headings <- headings[1:length(df_long)]
 
 headings <- headings %>% map(~ strsplit(., split = '>|<') %>%
-                               unlist() %>% .[3] %>% str_trim()) %>% unlist() # format headings
+                               unlist() %>% .[3] %>% str_trim()) %>% unlist()
 
+#all_squads <- df_long[[1]] %>% pull(Squad)
 all_vis <- c(
   'GF vs. xG',
   'npxG vs. xGA',
   'GA vs. SoTA',
   'GA vs. PSxG',
   'npxG/Sh vs. Sh/90'
-) # key for plot selection
-                              
+)
 column_keys <- list(
   c('Squad', 'MP', 'W', 'D', 'L', 'GF', 'GA', 'Pts', 'xG', 'xGA'),
   c('Squad', 'MP', 'Gls', 'xG', 'npxG', 'xGA', 'xAG', 'npxG+xAG'),
@@ -48,8 +47,7 @@ column_keys <- list(
   c('Squad', 'GA', 'PKA', 'PSxG', 'PSxG/SoT', 'PSxG+/-'),
   c('Squad', 'Gls', 'Sh', 'SoT', 'SoT%', 'Sh/90', 'SoT/90', 'G/Sh',
     'xG', 'npxG', 'npxG/Sh', 'G-xG')
-) # columns to select for visualization
-                              
+)
 plot_descs <- list(
   'The GF (goals scored) vs. xG (expected goals) plot shows the \n 
   over- or under-performance of goal scoring relative to expectation. \n
@@ -69,40 +67,41 @@ plot_descs <- list(
   the shot volume relative to quality of shots taken. High npxG/Sh and high \n
   Sh/90 indicates teams taking a high volumne of high-chance shots. \n
   Dotted lines indicate league medians'
-) # brief descriptions 
+)
 
-`%nin%` <- Negate(`%in%`) # helper function for negation of %in% 
+`%nin%` <- Negate(`%in%`)
 
- url_players <- list(
+url_players <- list(
   'https://fbref.com/en/comps/9/shooting/Premier-League-Stats',
   'https://fbref.com/en/comps/9/passing/Premier-League-Stats',
   'https://fbref.com/en/comps/9/gca/Premier-League-Stats',
   'https://fbref.com/en/comps/9/defense/Premier-League-Stats'
 )
 
-# helper function to scrape dynamic tables
+url_gk <- list('https://fbref.com/en/comps/9/keepers/Premier-League-Stats',
+               'https://fbref.com/en/comps/9/keepersadv/Premier-League-Stats')
+
 pull_xml_table <- function(x){
   df <- read_html(x) %>% xml_find_all('//comment()') %>% xml_text() %>% 
     paste0(collapse = "") %>% read_html %>% xml_find_all("//table") %>% html_table
   df <- df[[1]]
   df <- clean_names(df)
-}                       
-                              
-# core server function
+}
+
 function(input, output){
 
   react_data <- reactive({
     df_long[[grep(as.character(input$plotSelect), all_vis)]]
-  }) # reactive object to select single data table based on user selection
+  })
   
   output$table <- DT::renderDataTable({
       df_long[[grep(input$plotSelect, all_vis)]] %>% 
       select(any_of(column_keys[[
           grep(as.character(input$plotSelect), all_vis)
         ]]))
-  }) # output live updating table
+  })
   
-output$plot <- renderPlot({
+  output$plot <- renderPlot({
     var_y <- strsplit(as.character(input$plotSelect), ' vs. ') %>%
       unlist() %>% head(1)
     var_x <- strsplit(as.character(input$plotSelect), ' vs. ') %>%
@@ -150,7 +149,7 @@ output$plot <- renderPlot({
         labs(title = input$plotSelect, 
              subtitle = paste0(input$teamSelect, ' highlighted'))
     }
-    if (input$hideLabels == TRUE){ # checkbox selection 
+    if (input$hideLabels == TRUE){
       p <- p + geom_label_repel(data = react_data() %>%
                                   filter(Squad == input$teamSelect),
                                 aes(label = Squad))
@@ -161,21 +160,21 @@ output$plot <- renderPlot({
   })
   
   output$text <- renderText({
-    plot_descs[[grep(input$plotSelect, all_vis)]] # description below plot
+    plot_descs[[grep(input$plotSelect, all_vis)]]
   })
   
-    # server functions for player stats tab
   react_data2 <- eventReactive(input$searchSelect, {
     df_players <- lapply(url_players, pull_xml_table)
     df_players <- df_players %>% lapply(function(x) x[,!duplicated(colnames(x))])
     key_stats <- c('Player', 'Pos', 'Gls', 'Sh', 'npxG', 
-               'Ast', 'xA', 'PrgDist', 'Att', 'Cmp%',
-               'SCA', 'TklW', 'Tkl%', 'Int', 'Clr')
+                   'Ast', 'xA', 'PrgDist','TotDist', 
+                   'Att', 'Cmp%', 'PrgP', 'PPA',
+                   'SCA90', 'GCA90', 'TklW', 'Tkl%', 'Int', 'Clr')
     df_players <- df_players %>% lapply(function(x) x %>% select(any_of(key_stats)))
     df_players[-(1:2)] <- df_players[-(1:2)] %>% lapply(function(x) x %>%
-                                              select(-any_of(c('Sh', 'Att'))))
+                                                          select(-any_of(c('Sh', 'Att'))))
     df_players <- df_players %>% lapply(function(x) x %>% 
-                                      filter(Player != 'Player'))
+                                          filter(Player != 'Player'))
     df_new <- df_players[[1]]
     for (i in 2:length(df_players)){
       df_new <- df_new %>% inner_join(df_players[[i]])
@@ -184,56 +183,65 @@ output$plot <- renderPlot({
     df_new <- df_new %>% 
       mutate(Pos = strsplit(Pos, split = ',') %>% map(~ .[1]) %>% unlist())
     df_new <- df_new %>% filter(Pos != 'GK')
-    df_new <- df_new %>% mutate(across(3:15, as.numeric))
-    df_medians <- df_new %>% group_by(Pos) %>% 
-      summarise(across(3:14, function(x) median(x, na.rm = TRUE))) %>%
-      mutate(Player = 'League Median') %>% relocate(Player)      
-    df_new <- df_new %>% filter(str_detect(Player, input$playerSelect)) %>% 
-      bind_rows(df_medians) %>% select(-Gls) %>%
-      group_by(Pos) %>% filter(n() != 1) %>% ungroup()
+    df_new <- df_new %>% mutate(across(3:19, as.numeric))
+    validate(need(grep(input$playerSelect, df_new$Player, ignore.case = TRUE) %>%
+                    length() == 1,
+                  message = 'Search error! \nCheck for unique, valid name search 
+           \nFor all searchable names, check the link on the sidebar'))
+    pos_s <- df_new %>% filter(str_detect(Player, regex(input$playerSelect, ignore_case = TRUE))) %>% 
+      pull(Pos)
+    df_new <- df_new %>% filter(Pos == pos_s) %>%
+      mutate(across(where(is.numeric), ~ ntile(.x, 100))) %>%
+      filter(str_detect(Player, regex(input$playerSelect, ignore_case = TRUE)))
+    player_s <- df_new %>% pull(Player)
+    df_new <- df_new %>% select(where(is.numeric)) %>%
+      pivot_longer(everything(), names_to = 'Metric', values_to = 'Percentile') %>%
+      mutate(Category = c(rep('Goal Scoring', 3), rep('Passing', 8),
+                     rep('Goal Creating Actions', 2), rep('Defense', 4))) %>%
+      mutate(Player = player_s) %>% mutate(Position = pos_s)
+    return(df_new)
   })
   
-    output$playerPlot <- renderPlot({
-    validate( # in case player search is invalid, display error message
-      need(expr = nrow(react_data2()) == 2,
+  output$playerPlot <- renderPlot({
+    validate(
+      need(expr = nrow(react_data2()) == 17,
            message = 'Search error! \nCheck for unique, valid name search 
-           \nFor all searchable names, visit the link on the sidebar'))
-    q <-  react_data2() %>% select(-Pos) %>%
-        pivot_longer(-Player, names_to = 'Metric', values_to = 'Values') %>%
+           \nFor all searchable names, check the link on the sidebar'))
+    q <-  react_data2() %>%
         mutate(Metric = case_when(Metric == 'Sh' ~ 'Shots',
+                                  Metric == 'Gls' ~ 'Goals',
                                   Metric == 'npxG' ~ 'Non-penalty xG',
                                   Metric == 'Ast' ~ 'Assists',
                                   Metric == 'xA' ~ 'xA',
                                   Metric == 'PrgDist' ~ 'Prg. Distance',
+                                  Metric == 'TotDist' ~ 'Total Distance',
                                   Metric == 'Att' ~ 'Passes Attempted',
                                   Metric == 'Cmp%' ~ 'Pass Completion %',
-                                  Metric == 'SCA' ~ 'Shot Creating Actions',
+                                  Metric == 'PrgP' ~ 'Progressive Passes',
+                                  Metric == 'PPA' ~ 'Passes into Penalty Area',
+                                  Metric == 'SCA90' ~ 'Shot Creating Actions/90',
+                                  Metric == 'GCA90' ~ 'Goal Creating Actions/90',
                                   Metric == 'TklW' ~ 'Tackles Won',
                                   Metric == 'Tkl%' ~ 'Tackles Won %',
                                   Metric == 'Int' ~ 'Interceptions',
                                   Metric == 'Clr' ~ 'Clearances')) %>%
-        mutate(Metric = factor(Metric,
-                               levels = c('Shots', 'Non-penalty xG', 'Assists', 
-                                          'xA', 'Prg. Distance', 
-                                          'Passes Attempted',
-                                          'Pass Completion %',
-                                          'Shot Creating Actions',
-                                          'Tackles Won', 'Tackles Won %',
-                                          'Interceptions', 'Clearances'))) %>%
-        ggplot(aes(x = Player, y = Values)) + 
-        geom_bar(stat = 'identity', aes(fill = Player), alpha = .6) +
-        facet_wrap(~Metric, scales = 'free') + theme_bw() + 
-        theme(legend.position = 'bottom', text = element_text(size = 14),
-              axis.text.x = element_blank()) +
+        ggplot(aes(x = fct_inorder(Metric), y = Percentile)) + 
+        geom_bar(stat = 'identity', aes(fill = Category), alpha = .7) +
+        coord_polar() + theme_minimal() +
+        theme(text = element_text(size = 14), legend.position = 'bottom',
+              axis.text.y = element_blank()) +
         xlab('') + ylab('') +
-        labs(title = paste0(react_data2()$Player, 
-                            ' vs. League Median amongst ',
-                            react_data2()$Pos),
-             subtitle = 'Premier League') + 
-      scale_fill_brewer(palette = 'Set1')
+        scale_fill_brewer(palette = 'Set1') +
+        labs(title = react_data2() %>% pull(Player) %>% unique(),
+             subtitle = paste0('Percentile among ',
+                               react_data2() %>% pull(Position) %>% unique(),
+                               '- Premier League'))
+    if (input$showLabelPlayers == TRUE){
+      q <- q + geom_text(aes(label = Percentile, y = Percentile + 3))
+    }
     print(q)
   })
-                
+  
   react_data3 <- eventReactive(input$gkSelect, {
     df_gk <- lapply(url_gk, pull_xml_table)
     df_gk <- df_gk %>% lapply(function(x) x[,!duplicated(colnames(x))])
@@ -246,7 +254,7 @@ output$plot <- renderPlot({
     return(df_gk2)
   })
   
-   output$gkPlot <- renderPlot({
+  output$gkPlot <- renderPlot({
     q <- react_data3() %>% ggplot(aes(x = `PSxG - GA`, y = `Save%`)) +
       geom_point(size = 6) +
       geom_vline(xintercept = median(react_data3() %>% pull(`PSxG - GA`)),
@@ -260,5 +268,5 @@ output$plot <- renderPlot({
       labs(title = 'PSxG-GA vs. Save%',
            subtitle = 'Premier League Goalkeepers')
     print(q)
-  })             
+  })
 }
