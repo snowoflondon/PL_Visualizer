@@ -23,7 +23,7 @@ fluidPage(
   theme = shinytheme('journal'),
   titlePanel('PL Visualizer by snowoflondon'),
   tabsetPanel(
-    tabPanel('Team Stats',
+    tabPanel(div('Team Stats', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
@@ -63,7 +63,7 @@ fluidPage(
                  'Source code'))
       )
     ),
-    tabPanel('Outfield Player Stats',
+    tabPanel(div('Outfield Player Stats', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
@@ -83,12 +83,12 @@ fluidPage(
                plotOutput(outputId = 'playerPlot',
                           height = '1200px') %>% withSpinner(color="#0dc5c1"))
       )),
-    tabPanel('Goalkeeper Stats',
+    tabPanel(div('Goalkeeper Stats', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
                  selectInput(inputId = 'gkSelect',
-                           label = 'Goalkeeper Search',
+                           label = 'Visualization',
                            choices = as.list(gk_stats),
                            multiple = FALSE),
                  a(href = 'https://fbref.com/en/comps/9/keepers/Premier-League-Stats',
