@@ -21,7 +21,9 @@ gk_stats <- c('PSxG - GA vs. SoTA vs. Save%') # add more later
 
 fluidPage(
   theme = shinytheme('journal'),
-  titlePanel('PL Visualizer by snowoflondon'),
+  titlePanel(div('PL Visualizer by snowoflondon', 
+                 style = "color: #1c1c1c; font-family:'Avanta Garde"),
+             windowTitle = 'PL Visualizer by snowoflondon'),
   tabsetPanel(
     tabPanel(div('Team Stats', style = "color: #2f4f4f"),
       fluidRow(
