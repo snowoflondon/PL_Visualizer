@@ -113,7 +113,8 @@ function(input, output){
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
         theme_bw() +
-        theme(text = element_text(size = 14), legend.position = 'none') + 
+        theme(text = element_text(size = 14), legend.position = 'none',
+              plot.background = element_rect(fill = '#edf2f4', colour = NA)) + 
         geom_vline(
           xintercept =  react_data() %>% 
             select(UQ(sym(var_x))) %>% pull() %>% median(),
@@ -133,7 +134,8 @@ function(input, output){
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
         theme_bw() +
-        theme(text = element_text(size = 14), legend.position = 'none') +
+        theme(text = element_text(size = 14), legend.position = 'none',
+              plot.background = element_rect(fill = '#edf2f4', color = NA)) +
         geom_abline() + 
         labs(title = input$plotSelect, 
              subtitle = paste0(input$teamSelect, ' highlighted'))
@@ -144,7 +146,8 @@ function(input, output){
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
         theme_bw() +
-        theme(text = element_text(size = 14), legend.position = 'none') +
+        theme(text = element_text(size = 14), legend.position = 'none',
+              plot.background = element_rect(fill = '#edf2f4', color = NA)) +
         geom_abline() + 
         labs(title = input$plotSelect, 
              subtitle = paste0(input$teamSelect, ' highlighted'))
@@ -229,7 +232,9 @@ function(input, output){
         geom_bar(stat = 'identity', aes(fill = Category), alpha = .7) +
         coord_polar() + theme_minimal() +
         theme(text = element_text(size = 14), legend.position = 'bottom',
-              axis.text.y = element_blank()) +
+              axis.text.y = element_blank(),
+              plot.background = element_rect(fill = '#edf2f4', color = NA),
+              panel.background = element_rect(fill = '#edf2f4', color = NA)) +
         xlab('') + ylab('') +
         scale_fill_brewer(palette = 'Set1') +
         labs(title = react_data2() %>% pull(Player) %>% unique(),
@@ -264,7 +269,8 @@ function(input, output){
       geom_label_repel(aes(label = Player)) + theme_bw() +
       xlab('Post shot expected goals minus goals conceded') + 
       ylab('Save percentage') +
-      theme(text = element_text(size = 14)) +
+      theme(text = element_text(size = 14),
+            plot.background = element_rect(fill = '#edf2f4', color = NA)) +
       labs(title = 'PSxG-GA vs. Save%',
            subtitle = 'Premier League Goalkeepers')
     print(q)
