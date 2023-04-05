@@ -37,7 +37,7 @@ The **Goalkeeper stats** tab currently shows one visualization, which correspond
 * `stringr`
 * `purrr`
 * `DT`
-* `shinythemes`
+* `bslib`
 * `RColorBrewer`
 * `ggplot`
 * `ggrepel`
