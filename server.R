@@ -231,10 +231,8 @@ function(input, output){
         ggplot(aes(x = fct_inorder(Metric), y = Percentile)) + 
         geom_bar(stat = 'identity', aes(fill = Category), alpha = .7) +
         coord_polar() + theme_minimal() +
-        theme(text = element_text(size = 14), legend.position = 'bottom',
-              axis.text.y = element_blank(),
-              plot.background = element_rect(fill = '#edf2f4', color = NA),
-              panel.background = element_rect(fill = '#edf2f4', color = NA)) +
+        theme(text = element_text(size = 18), legend.position = 'bottom',
+              axis.text.y = element_blank()) +
         xlab('') + ylab('') +
         scale_fill_brewer(palette = 'Set1') +
         labs(title = react_data2() %>% pull(Player) %>% unique(),
