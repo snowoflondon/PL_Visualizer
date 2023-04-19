@@ -31,7 +31,7 @@ theme <- bslib::bs_theme(
 fluidPage(
   theme = theme,
   titlePanel('PL Visualizer by snowoflondon',
-             windowTitle = 'PL Visualizer by snowoflondon'),
+             windowTitle = 'PL Visualizer by snowoflondon - Brian Jungmin Park'),
   tabsetPanel(
     tabPanel(div('Team Stats', style = "color: #2f4f4f"),
       fluidRow(
@@ -52,13 +52,13 @@ fluidPage(
                )),
         column(width = 8,
                DT::dataTableOutput(outputId = 'table') %>% 
-                 withSpinner(color="#0dc5c1"))
+                 withSpinner(color="#8d99ae", type = 6))
       ),
       fluidRow(
         column(width = 12,
                plotOutput(outputId = 'plot',
                           height = '600px') %>% 
-                 withSpinner(color="#0dc5c1"))
+                 withSpinner(color="#8d99ae", type = 6))
       ),
       fluidRow(
         column(width = 12,
@@ -91,7 +91,7 @@ fluidPage(
                )),
         column(width = 8,
                plotOutput(outputId = 'playerPlot',
-                          height = '1200px') %>% withSpinner(color="#0dc5c1"))
+                          height = '1200px') %>% withSpinner(color='#8d99ae', type = 6))
       )),
     tabPanel(div('Goalkeeper Stats', style = "color: #2f4f4f"),
       fluidRow(
@@ -106,7 +106,7 @@ fluidPage(
                )),
         column(width = 8,
                plotOutput(outputId = 'gkPlot',
-                          height = '1200px') %>% withSpinner(color="#0dc5c1"))
+                          height = '1200px') %>% withSpinner(color = '#8d99ae', type = 6))
       ))
   )
 )
