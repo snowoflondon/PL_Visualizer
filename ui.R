@@ -20,7 +20,7 @@ vis <- c(
 gk_stats <- c('PSxG - GA vs. SoTA vs. Save%') # add more later
 
 theme <- bslib::bs_theme(
-  bg = "#edf2f4", fg = "#2b2d42",
+  bg = "#ffffff", fg = "#2b2d42",
   primary = "#8d99ae", secondary = "#8d99ae",
   base_font = font_google("Roboto Serif", local = TRUE),
   code_font = c("Courier", "monospace"),
