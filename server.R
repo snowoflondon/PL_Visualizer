@@ -114,7 +114,7 @@ function(input, output){
                    aes(color = Squad), size = 6) +
         theme_bw() +
         theme(text = element_text(size = 14), legend.position = 'none',
-              plot.background = element_rect(fill = '#edf2f4', colour = NA)) + 
+              plot.background = element_rect(fill = '#ffffff', colour = NA)) + 
         geom_vline(
           xintercept =  react_data() %>% 
             select(UQ(sym(var_x))) %>% pull() %>% median(),
