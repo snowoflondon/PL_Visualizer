@@ -5,6 +5,8 @@ library(DT)
 library(xml2)
 library(RColorBrewer)
 
+## Current code fetches data from fbref for the 2022-2023 season
+
 url <- 'https://fbref.com/en/comps/9/Premier-League-Stats'
 html <- read_html(url)
 df_long <- html %>% html_elements('table') %>% html_table()
