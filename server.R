@@ -6,6 +6,7 @@ library(xml2)
 library(RColorBrewer)
 
 ## Current code fetches data from fbref for the 2022-2023 season
+## Website may not function as intended as the data over the course of the season matures
 
 url <- 'https://fbref.com/en/comps/9/Premier-League-Stats'
 html <- read_html(url)
@@ -73,7 +74,7 @@ plot_descs <- list(
 
 `%nin%` <- Negate(`%in%`)
 
-url_players <- list(
+url_players <- list( # this is currently not working as intended due to the early access of the data
   'https://fbref.com/en/comps/9/shooting/Premier-League-Stats',
   'https://fbref.com/en/comps/9/passing/Premier-League-Stats',
   'https://fbref.com/en/comps/9/gca/Premier-League-Stats',
