@@ -6,9 +6,9 @@ squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
             'Brighton', 'Chelsea', 'Fulham',
             'Brentford', 'Crystal Palace', 'Aston Villa',
-            'Leicester City', 'Bournemouth', 'Leeds United',
+            'Luton Town', 'Bournemouth', 'Burnley',
             'West Ham', 'Everton', 'Nott\'ham Forest',
-            'Southampton', 'Wolves')
+            'Sheffield Utd', 'Wolves')
 vis <- c(
   'GF vs. xG',
   'npxG vs. xGA',
@@ -79,7 +79,7 @@ fluidPage(
                verticalLayout(
                  textInput(inputId = 'playerSelect',
                            label = 'Player Search',
-                           value = 'Harry Kane'),
+                           value = 'James Maddison'),
                  checkboxInput(inputId = 'showLabelPlayers',
                                label = 'Show percentile labels',
                                value = FALSE),
