@@ -5,9 +5,6 @@ library(DT)
 library(xml2)
 library(RColorBrewer)
 
-## Current code fetches data from fbref for the 2022-2023 season
-## Website may not function as intended as the data over the course of the season matures
-
 url <- 'https://fbref.com/en/comps/9/Premier-League-Stats'
 html <- read_html(url)
 df_long <- html %>% html_elements('table') %>% html_table()
@@ -22,7 +19,11 @@ df_long <- df_long %>% lapply(function(x) x[,!duplicated(colnames(x))])
 df_long[[2]] <- df_long[[2]] %>% left_join(
   df_long[[1]] %>% select(Squad, xGA), by = 'Squad'
 )
-df_long[[1]] <- df_long[[1]] %>% select(-c(Rk, `Last 5`, 
+#df_long[[1]] <- df_long[[1]] %>% select(-c(Rk, `Last 5`, 
+                                           #Attendance, `Top Team Scorer`,
+                                           #Goalkeeper, Notes))
+
+df_long[[1]] <- df_long[[1]] %>% select(-c(Rk,
                                            Attendance, `Top Team Scorer`,
                                            Goalkeeper, Notes))
 
@@ -74,7 +75,7 @@ plot_descs <- list(
 
 `%nin%` <- Negate(`%in%`)
 
-url_players <- list( # this is currently not working as intended due to the early access of the data
+url_players <- list(
   'https://fbref.com/en/comps/9/shooting/Premier-League-Stats',
   'https://fbref.com/en/comps/9/passing/Premier-League-Stats',
   'https://fbref.com/en/comps/9/gca/Premier-League-Stats',
@@ -116,8 +117,7 @@ function(input, output){
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
         theme_bw() +
-        theme(text = element_text(size = 14), legend.position = 'none',
-              plot.background = element_rect(fill = '#ffffff', colour = NA)) + 
+        theme(text = element_text(size = 14), legend.position = 'none') + 
         geom_vline(
           xintercept =  react_data() %>% 
             select(UQ(sym(var_x))) %>% pull() %>% median(),
@@ -137,8 +137,7 @@ function(input, output){
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
         theme_bw() +
-        theme(text = element_text(size = 14), legend.position = 'none',
-              plot.background = element_rect(fill = '#edf2f4', color = NA)) +
+        theme(text = element_text(size = 14), legend.position = 'none') +
         geom_abline() + 
         labs(title = input$plotSelect, 
              subtitle = paste0(input$teamSelect, ' highlighted'))
@@ -149,8 +148,7 @@ function(input, output){
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
         theme_bw() +
-        theme(text = element_text(size = 14), legend.position = 'none',
-              plot.background = element_rect(fill = '#edf2f4', color = NA)) +
+        theme(text = element_text(size = 14), legend.position = 'none') +
         geom_abline() + 
         labs(title = input$plotSelect, 
              subtitle = paste0(input$teamSelect, ' highlighted'))
@@ -239,9 +237,9 @@ function(input, output){
         xlab('') + ylab('') +
         scale_fill_brewer(palette = 'Set1') +
         labs(title = react_data2() %>% pull(Player) %>% unique(),
-             subtitle = paste0('Percentile among ',
+             subtitle = paste0('Percentile among other ',
                                react_data2() %>% pull(Position) %>% unique(),
-                               '- Premier League'))
+                               ' - Premier League (2022-2023)'))
     if (input$showLabelPlayers == TRUE){
       q <- q + geom_text(aes(label = Percentile, y = Percentile + 3))
     }
@@ -270,8 +268,7 @@ function(input, output){
       geom_label_repel(aes(label = Player)) + theme_bw() +
       xlab('Post shot expected goals minus goals conceded') + 
       ylab('Save percentage') +
-      theme(text = element_text(size = 14),
-            plot.background = element_rect(fill = '#edf2f4', color = NA)) +
+      theme(text = element_text(size = 14)) +
       labs(title = 'PSxG-GA vs. Save%',
            subtitle = 'Premier League Goalkeepers')
     print(q)
