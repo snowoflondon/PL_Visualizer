@@ -3,9 +3,6 @@
 ## Introduction
 `PL Visualizer` is a Shiny app aimed to visualize advanced team statistics from the Premier League. This app scrapes squad and individual player data from [Fbref](https://fbref.com/en/comps/9/Premier-League-Stats) using the R package `rvest`. The Shiny app can be accessed here: https://brianjmpark.shinyapps.io/pl_visualizer/
 
-**Currently, the site is under maintenance in preparation of the 2023-2024 season. Support for the upcoming campaign is coming soon.**
-**Currently, as the new season's data matures, certain functionalities may not work as intended.**
-
 ## Explanation
 `PL Visualizer` currently supports 3 main types of visualizations: **Team stats**, **Outfield player stats**, and **Goalkeeper stats**. 
 
