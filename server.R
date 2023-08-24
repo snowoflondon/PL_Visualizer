@@ -116,7 +116,7 @@ function(input, output){
         geom_point(size = 6) +
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
-        theme_bw() +
+        theme_classic() +
         theme(text = element_text(size = 14), legend.position = 'none') + 
         geom_vline(
           xintercept =  react_data() %>% 
@@ -136,7 +136,7 @@ function(input, output){
         geom_point(size = 6) +
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
-        theme_bw() +
+        theme_classic() +
         theme(text = element_text(size = 14), legend.position = 'none') +
         geom_abline() + 
         labs(title = input$plotSelect, 
@@ -147,7 +147,7 @@ function(input, output){
         geom_point(size = 6) +
         geom_point(data = react_data() %>% filter(Squad == input$teamSelect),
                    aes(color = Squad), size = 6) +
-        theme_bw() +
+        theme_classic() +
         theme(text = element_text(size = 14), legend.position = 'none') +
         geom_abline() + 
         labs(title = input$plotSelect, 
@@ -156,9 +156,10 @@ function(input, output){
     if (input$hideLabels == TRUE){
       p <- p + geom_label_repel(data = react_data() %>%
                                   filter(Squad == input$teamSelect),
-                                aes(label = Squad))
+                                aes(label = Squad),
+                                size = 6)
     } else {
-      p <- p + geom_label_repel(aes(label = Squad))
+      p <- p + geom_label_repel(aes(label = Squad), size = 6)
     }
     print(p)
   })
@@ -265,10 +266,11 @@ function(input, output){
                  linetype = 'dashed') + 
       geom_hline(yintercept = median(react_data3() %>% pull(`Save%`)), 
                  linetype = 'dashed') + 
-      geom_label_repel(aes(label = Player)) + theme_bw() +
+      geom_label_repel(aes(label = Player), size = 6) + 
+      theme_classic() +
       xlab('Post shot expected goals minus goals conceded') + 
       ylab('Save percentage') +
-      theme(text = element_text(size = 14)) +
+      theme(text = element_text(size = 16)) +
       labs(title = 'PSxG-GA vs. Save%',
            subtitle = 'Premier League Goalkeepers')
     print(q)
