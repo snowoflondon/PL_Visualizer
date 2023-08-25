@@ -102,7 +102,7 @@ fluidPage(
                            choices = as.list(gk_stats),
                            multiple = FALSE),
                  a(href = 'https://fbref.com/en/comps/9/keepers/Premier-League-Stats',
-                   'All searchable player names here')
+                   'Data source')
                )),
         column(width = 8,
                plotOutput(outputId = 'gkPlot',
