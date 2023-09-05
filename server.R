@@ -250,7 +250,7 @@ function(input, output){
   react_data3 <- eventReactive(input$gkSelect, {
     df_gk <- lapply(url_gk, pull_xml_table)
     df_gk <- df_gk %>% lapply(function(x) x[,!duplicated(colnames(x))])
-    gk_key <- c('Player', 'GA', 'Save%', 'PSxG') # add more later
+    gk_key <- c('Player', 'GA', 'Save%', 'PSxG', 'PSxG/SoT') # add more later
     df_gk <- df_gk %>% lapply(function(x) x %>% select(any_of(gk_key)) %>%
                                 filter(Player != 'Player'))
     df_gk2 <- df_gk[[1]] %>% inner_join(df_gk[[2]]) %>%
@@ -260,19 +260,36 @@ function(input, output){
   })
   
   output$gkPlot <- renderPlot({
-    q <- react_data3() %>% ggplot(aes(x = `PSxG - GA`, y = `Save%`)) +
-      geom_point(size = 6) +
-      geom_vline(xintercept = median(react_data3() %>% pull(`PSxG - GA`)),
-                 linetype = 'dashed') + 
-      geom_hline(yintercept = median(react_data3() %>% pull(`Save%`)), 
-                 linetype = 'dashed') + 
-      geom_label_repel(aes(label = Player), size = 6) + 
-      theme_classic() +
-      xlab('Post shot expected goals minus goals conceded') + 
-      ylab('Save percentage') +
-      theme(text = element_text(size = 16)) +
-      labs(title = 'PSxG-GA vs. Save%',
-           subtitle = 'Premier League Goalkeepers')
+    if (input$gkSelect == 'PSxG - GA vs. SoTA vs. Save%'){
+      q <- react_data3() %>% ggplot(aes(x = `PSxG - GA`, y = `Save%`)) +
+        geom_point(size = 6) +
+        geom_vline(xintercept = median(react_data3() %>% pull(`PSxG - GA`)),
+                   linetype = 'dashed') + 
+        geom_hline(yintercept = median(react_data3() %>% pull(`Save%`)), 
+                   linetype = 'dashed') + 
+        geom_label_repel(aes(label = Player), size = 6) + 
+        theme_classic() +
+        xlab('Post shot expected goals minus goals conceded') + 
+        ylab('Save percentage') +
+        theme(text = element_text(size = 16)) +
+        labs(title = 'PSxG-GA vs. Save%',
+             subtitle = 'Premier League Goalkeepers')
+    }
+    if (input$gkSelect == 'PSxG/SoT vs. Save%'){
+      q <- react_data3() %>% ggplot(aes(x = `PSxG/SoT`, y = `Save%`)) +
+        geom_point(size = 6) +
+        geom_vline(xintercept = median(react_data3() %>% pull(`PSxG/SoT`)),
+                   linetype = 'dashed') + 
+        geom_hline(yintercept = median(react_data3() %>% pull(`Save%`)), 
+                   linetype = 'dashed') + 
+        geom_label_repel(aes(label = Player), size = 6) + 
+        theme_classic() +
+        xlab('Post shot expected goals per shots on target') + 
+        ylab('Save percentage') +
+        theme(text = element_text(size = 16)) +
+        labs(title = 'PSxG/SoT vs. Save%',
+             subtitle = 'Premier League Goalkeepers')
+    }
     print(q)
   })
 }
