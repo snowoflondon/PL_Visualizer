@@ -17,7 +17,8 @@ vis <- c(
   'npxG/Sh vs. Sh/90'
 )
 
-gk_stats <- c('PSxG - GA vs. SoTA vs. Save%') # add more later
+gk_stats <- c('PSxG - GA vs. SoTA vs. Save%',
+              'PSxG/SoT vs. Save%') # add more later
 
 theme <- bslib::bs_theme(
   bg = "#ffffff", fg = "#2b2d42",
