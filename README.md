@@ -29,7 +29,9 @@ Note this tab does not support or include goalkeepers.
 
 Caveat: the program currently does not support players who have played for multiple clubs (e.g., Daniel James have played for both Leeds and Fulham in the '21-'22 season). 
 
-The **Goalkeeper stats** tab currently shows one visualization, which corresponds to the 'post-shot expected goals minus goals allowed vs. save percentage' figure. 
+The **Goalkeeper stats** tab currently shows two visualizations:
+* Post-shot expected goals differential (PsXG - GA) versus save percentage
+* Post-shot expected goals per shots on target (PsXG/SoT) versus save percentage
 
 ## R dependencies
 * `shiny`
