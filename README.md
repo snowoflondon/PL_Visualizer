@@ -37,9 +37,7 @@ The **Goalkeeper stats** tab currently shows two visualizations:
 * `shiny`
 * `rvest`
 * `xml2`
-* `dplyr`
-* `stringr`
-* `purrr`
+* `dplyr`, `purrr`, `stringr`
 * `DT`
 * `bslib`
 * `RColorBrewer`
