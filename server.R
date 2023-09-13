@@ -240,7 +240,7 @@ function(input, output){
         labs(title = react_data2() %>% pull(Player) %>% unique(),
              subtitle = paste0('Percentile among other ',
                                react_data2() %>% pull(Position) %>% unique(),
-                               ' - Premier League (2022-2023)'))
+                               ' - Premier League (2023-2024)'))
     if (input$showLabelPlayers == TRUE){
       q <- q + geom_text(aes(label = Percentile, y = Percentile + 3))
     }
