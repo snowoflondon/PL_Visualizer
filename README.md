@@ -6,9 +6,9 @@
 The web app has now been updated according to the new Premier League campaign! 
 
 ## Explanation
-`PL Visualizer` currently supports 3 main types of visualizations: **Team stats**, **Outfield player stats**, and **Goalkeeper stats**. 
+`PL Visualizer` currently supports 3 main types of visualizations: **Squad Scatterplots**, **Positional Player Slice Charts**, and **Goalkeeper Scatterplots**. 
 
-For **team stats**, there are currently 5 types of visualizations:
+For **Squad Scatterplots**, there are currently 5 types of visualizations:
 * Goals scored vs. expected goals
 * Non-penalty expected goals vs. goals conceded
 * Goals conceded vs. shots on target against
@@ -21,7 +21,7 @@ Changing user choices from the drop-down menus automatically refreshes the data 
 
 Ticking the checkbox for 'Hide non-selected squad labels' de-clutters the plot by only highlighting the user-selected squad.
 
-For **Outfield player stats**, the program draws 17 different individual statistics for the selected player and calculates the percentile against other players in the same position. These 17 statistics are: 
+For **Positional Player Slice Charts**, the program draws 17 different individual statistics for the selected player and calculates the percentile against other players in the same position. These 17 statistics are: 
 
 *Shots, Non-penalty expected goals, Assists, Expected assists, Progressive distance, Total distance, Total passes attempted, Pass completion %, Progressive passes, Passes into the penalty area, Goal creating actions, Shot creating actions, Tackles won, Tackles won %, Interceptions*, and *Clearances*. 
 
@@ -29,7 +29,7 @@ Note this tab does not support or include goalkeepers.
 
 Caveat: the program currently does not support players who have played for multiple clubs (e.g., Daniel James have played for both Leeds and Fulham in the '21-'22 season). 
 
-The **Goalkeeper stats** tab currently shows two visualizations:
+The **Goalkeeper Scatterplots** tab currently shows two visualizations:
 * Post-shot expected goals differential (PsXG - GA) versus save percentage
 * Post-shot expected goals per shots on target (PsXG/SoT) versus save percentage
 
