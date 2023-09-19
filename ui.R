@@ -1,6 +1,6 @@
 library(bslib)
 library(shinycssloaders)
-library(magrittr)  
+library(magrittr)
 
 squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
@@ -23,9 +23,9 @@ gk_stats <- c('PSxG - GA vs. SoTA vs. Save%',
 theme <- bslib::bs_theme(
   bg = "#ffffff", fg = "#2b2d42",
   primary = "#8d99ae", secondary = "#8d99ae",
-  base_font = font_google("Roboto Serif", local = TRUE),
+  base_font = font_google("Fira Sans", local = TRUE),
   code_font = c("Courier", "monospace"),
-  heading_font = font_google("Roboto Serif", local = TRUE),
+  heading_font = font_google("Crimson Pro", local = TRUE),
   "input-border-color" = "#363537"
 )
 
@@ -34,7 +34,7 @@ fluidPage(
   titlePanel('PL Visualizer by snowoflondon',
              windowTitle = 'PL Visualizer by snowoflondon - Brian Jungmin Park'),
   tabsetPanel(
-    tabPanel(div('Team Stats', style = "color: #2f4f4f"),
+    tabPanel(div('Squad Scatterplots', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
@@ -74,7 +74,7 @@ fluidPage(
                  'Source code'))
       )
     ),
-    tabPanel(div('Outfield Player Stats', style = "color: #2f4f4f"),
+    tabPanel(div('Positional Player Slice Charts', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
@@ -94,7 +94,7 @@ fluidPage(
                plotOutput(outputId = 'playerPlot',
                           height = '1200px') %>% withSpinner(color='#8d99ae', type = 6))
       )),
-    tabPanel(div('Goalkeeper Stats', style = "color: #2f4f4f"),
+    tabPanel(div('Goalkeeper Scatterplots', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
