@@ -242,7 +242,8 @@ function(input, output){
                                react_data2() %>% pull(Position) %>% unique(),
                                ' - Premier League (2023-2024)'))
     if (input$showLabelPlayers == TRUE){
-      q <- q + geom_text(aes(label = Percentile, y = Percentile + 3))
+      q <- q + geom_text(aes(label = Percentile, y = Percentile + 3), 
+                         size = 5)
     }
     print(q)
   })
