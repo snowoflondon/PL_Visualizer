@@ -1,6 +1,6 @@
 library(bslib)
 library(shinycssloaders)
-library(magrittr)
+library(magrittr)  
 
 squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
