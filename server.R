@@ -251,12 +251,13 @@ function(input, output){
   react_data3 <- eventReactive(input$gkSelect, {
     df_gk <- lapply(url_gk, pull_xml_table)
     df_gk <- df_gk %>% lapply(function(x) x[,!duplicated(colnames(x))])
-    gk_key <- c('Player', 'GA', 'Save%', 'PSxG', 'PSxG/SoT') # add more later
+    gk_key <- c('Player', '90s', 'GA', 'Save%', 'PSxG', 'PSxG/SoT') # add more later
     df_gk <- df_gk %>% lapply(function(x) x %>% select(any_of(gk_key)) %>%
                                 filter(Player != 'Player'))
     df_gk2 <- df_gk[[1]] %>% inner_join(df_gk[[2]]) %>%
       mutate(across(-1, as.numeric)) %>%
       mutate(`PSxG - GA` = PSxG-GA)
+    df_gk2 <- df_gk2 %>% filter(`90s` >= 3)
     return(df_gk2)
   })
   
