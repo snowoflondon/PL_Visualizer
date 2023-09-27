@@ -5,7 +5,7 @@ library(DT)
 library(xml2)
 library(RColorBrewer)
 
-url <- 'https://fbref.com/en/comps/9/Premier-League-Stats'
+url <- 'https://fbref.com/en/comps/9/Premier-League-Stats' ## replace this with other season if outdated
 html <- read_html(url)
 df_long <- html %>% html_elements('table') %>% html_table()
 df_long <- df_long[seq(1, length(df_long), 2)]
