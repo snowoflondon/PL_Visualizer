@@ -11,7 +11,7 @@ html <- read_html(url)
 df_long <- html %>% html_elements('table') %>% html_table()
 df_long <- df_long[seq(1, length(df_long), 2)]
 clean_names <- function(x){
-  names(x) <- x[1,]
+  colnames(x) <- x[1,]
   x <- x[-1,]
   return(x)
 }
