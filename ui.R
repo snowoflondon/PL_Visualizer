@@ -6,9 +6,9 @@ squads <- c('Arsenal', 'Manchester City', 'Newcastle Utd',
             'Tottenham', 'Manchester Utd', 'Liverpool',
             'Brighton', 'Chelsea', 'Fulham',
             'Brentford', 'Crystal Palace', 'Aston Villa',
-            'Luton Town', 'Bournemouth', 'Burnley',
+            'Sunderland', 'Bournemouth', 'Burnley',
             'West Ham', 'Everton', 'Nott\'ham Forest',
-            'Sheffield Utd', 'Wolves')
+            'Leeds United', 'Wolves')
 vis <- c(
   'GF vs. xG',
   'npxG vs. xGA',
@@ -18,15 +18,16 @@ vis <- c(
 )
 
 gk_stats <- c('PSxG - GA vs. SoTA vs. Save%',
-              'PSxG/SoT vs. Save%') # add more later
+              'PSxG/SoT vs. Save%') 
 
 theme <- bslib::bs_theme(
-  bg = "#ffffff", fg = "#2b2d42",
-  primary = "#8d99ae", secondary = "#8d99ae",
-  base_font = font_google("Fira Sans", local = TRUE),
+  bg = "#ffffff", fg = "#45484d",
+  primary = "#4556F7", secondary = "#4556F7",
+  base_font = font_google("Montserrat", local = TRUE),
   code_font = c("Courier", "monospace"),
-  heading_font = font_google("Crimson Pro", local = TRUE),
-  "input-border-color" = "#363537"
+  heading_font = font_google("Montserrat", local = TRUE),
+  font_scale = 1.15,
+  "input-border-color" = "#120603"
 )
 
 fluidPage(
@@ -79,14 +80,14 @@ fluidPage(
         column(width = 4,
                verticalLayout(
                  textInput(inputId = 'playerSelect',
-                           label = 'Player Search',
-                           value = 'James Maddison'),
+                           label = 'Search for a player...',
+                           value = 'Cristian Romero'),
                  checkboxInput(inputId = 'showLabelPlayers',
                                label = 'Show percentile labels',
                                value = FALSE),
                  actionButton(inputId = 'searchSelect',
                               label = 'Submit'),
-                 p('* Goalkeepers currently not supported!'),
+                 p('* Goalkeepers not included!'),
                  a(href = 'https://fbref.com/en/comps/9/stats/Premier-League-Stats',
                    'All searchable player names here')
                )),

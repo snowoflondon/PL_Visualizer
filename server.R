@@ -4,30 +4,27 @@ library(ggrepel)
 library(DT)
 library(xml2)
 library(RColorBrewer)
-
+library(polite)
 
 url <- 'https://fbref.com/en/comps/9/Premier-League-Stats'
-html <- read_html(url)
-df_long <- html %>% html_elements('table') %>% html_table()
+mask <- 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+session <- bow(url, user_agent = mask) # mask as web browser
+html <- scrape(session) 
+df_long <- html |> html_elements('table') |> html_table()
 df_long <- df_long[seq(1, length(df_long), 2)]
 clean_names <- function(x){
-  colnames(x) <- x[1,]
+  names(x) <- x[1,]
   x <- x[-1,]
   return(x)
 }
-df_long[-1] <- df_long[-1] %>% map(~ clean_names(.))
-df_long <- df_long %>% lapply(function(x) x[,!duplicated(colnames(x))])
-df_long[[2]] <- df_long[[2]] %>% left_join(
-  df_long[[1]] %>% select(Squad, xGA), by = 'Squad'
+df_long[-1] <- df_long[-1] |> map(~ clean_names(.))
+df_long <- df_long |> lapply(function(x) x[,!duplicated(colnames(x))])
+df_long[[2]] <- df_long[[2]] |> left_join(
+  df_long[[1]] |> select(Squad, xGA), by = 'Squad'
 )
-#df_long[[1]] <- df_long[[1]] %>% select(-c(Rk, `Last 5`, 
-                                           #Attendance, `Top Team Scorer`,
-                                           #Goalkeeper, Notes))
-
 df_long[[1]] <- df_long[[1]] %>% select(-c(Rk,
                                            Attendance, `Top Team Scorer`,
                                            Goalkeeper, Notes))
-
 df_long <- df_long %>% map(~ mutate(., across(2:ncol(.), as.numeric)))
 
 headings <- html %>% html_elements('h2') %>% as.character()
@@ -36,8 +33,6 @@ headings <- headings[1:length(df_long)]
 
 headings <- headings %>% map(~ strsplit(., split = '>|<') %>%
                                unlist() %>% .[3] %>% str_trim()) %>% unlist()
-
-#all_squads <- df_long[[1]] %>% pull(Squad)
 all_vis <- c(
   'GF vs. xG',
   'npxG vs. xGA',
@@ -73,6 +68,7 @@ plot_descs <- list(
   Sh/90 indicates teams taking a high volumne of high-chance shots. \n
   Dotted lines indicate league medians'
 )
+#######################################################################
 
 `%nin%` <- Negate(`%in%`)
 
@@ -87,24 +83,47 @@ url_gk <- list('https://fbref.com/en/comps/9/keepers/Premier-League-Stats',
                'https://fbref.com/en/comps/9/keepersadv/Premier-League-Stats')
 
 pull_xml_table <- function(x){
-  df <- read_html(x) %>% xml_find_all('//comment()') %>% xml_text() %>% 
+  df <- bow(x, user_agent = mask) %>% scrape() %>% xml_find_all('//comment()') %>% xml_text() %>% 
     paste0(collapse = "") %>% read_html %>% xml_find_all("//table") %>% html_table
   df <- df[[1]]
   df <- clean_names(df)
+} # helper function for player and gk stats
+
+df_players <- lapply(url_players, pull_xml_table)
+df_players <- df_players %>% lapply(function(x) x[,!duplicated(colnames(x))])
+key_stats <- c('Player', 'Pos', 'Gls', 'Sh', 'npxG', 
+               'Ast', 'xA', 'PrgDist','TotDist', 
+               'Att', 'Cmp%', 'PrgP', 'PPA',
+               'SCA90', 'GCA90', 'TklW', 'Tkl%', 'Int', 'Clr')
+df_players <- df_players %>% lapply(function(x) x %>% select(any_of(key_stats)))
+df_players[-(1:2)] <- df_players[-(1:2)] %>% lapply(function(x) x %>%
+                                                      select(-any_of(c('Sh', 'Att'))))
+df_players <- df_players %>% lapply(function(x) x %>% 
+                                      filter(Player != 'Player'))
+df_new <- df_players[[1]]
+for (i in 2:length(df_players)){
+  df_new <- df_new %>% inner_join(df_players[[i]])
 }
+df_new <- df_new[!duplicated(df_new$Player),]
+df_new <- df_new %>% 
+  mutate(Pos = strsplit(Pos, split = ',') %>% map(~ .[1]) %>% unlist())
+df_new <- df_new %>% filter(Pos != 'GK')
+df_new <- df_new %>% mutate(across(3:19, as.numeric))
+player_names <- unique(df_new$Player)
+#######################################################################
 
 function(input, output){
 
   react_data <- reactive({
     df_long[[grep(as.character(input$plotSelect), all_vis)]]
-  })
+  }) # main reactive data
   
   output$table <- DT::renderDataTable({
       df_long[[grep(input$plotSelect, all_vis)]] %>% 
       select(any_of(column_keys[[
           grep(as.character(input$plotSelect), all_vis)
         ]]))
-  })
+  }) # main table, tab 1
   
   output$plot <- renderPlot({
     var_y <- strsplit(as.character(input$plotSelect), ' vs. ') %>%
@@ -163,37 +182,20 @@ function(input, output){
       p <- p + geom_label_repel(aes(label = Squad), size = 6)
     }
     print(p)
-  })
+  }) # main figure, tab 1
   
   output$text <- renderText({
     plot_descs[[grep(input$plotSelect, all_vis)]]
-  })
+  }) # figure description
+  
+  #######################################################################
   
   react_data2 <- eventReactive(input$searchSelect, {
-    df_players <- lapply(url_players, pull_xml_table)
-    df_players <- df_players %>% lapply(function(x) x[,!duplicated(colnames(x))])
-    key_stats <- c('Player', 'Pos', 'Gls', 'Sh', 'npxG', 
-                   'Ast', 'xA', 'PrgDist','TotDist', 
-                   'Att', 'Cmp%', 'PrgP', 'PPA',
-                   'SCA90', 'GCA90', 'TklW', 'Tkl%', 'Int', 'Clr')
-    df_players <- df_players %>% lapply(function(x) x %>% select(any_of(key_stats)))
-    df_players[-(1:2)] <- df_players[-(1:2)] %>% lapply(function(x) x %>%
-                                                          select(-any_of(c('Sh', 'Att'))))
-    df_players <- df_players %>% lapply(function(x) x %>% 
-                                          filter(Player != 'Player'))
-    df_new <- df_players[[1]]
-    for (i in 2:length(df_players)){
-      df_new <- df_new %>% inner_join(df_players[[i]])
-    }
-    df_new <- df_new[!duplicated(df_new$Player),]
-    df_new <- df_new %>% 
-      mutate(Pos = strsplit(Pos, split = ',') %>% map(~ .[1]) %>% unlist())
-    df_new <- df_new %>% filter(Pos != 'GK')
-    df_new <- df_new %>% mutate(across(3:19, as.numeric))
     validate(need(grep(input$playerSelect, df_new$Player, ignore.case = TRUE) %>%
                     length() == 1,
                   message = 'Search error! \nCheck for unique, valid name search 
            \nFor all searchable names, check the link on the sidebar'))
+  
     pos_s <- df_new %>% filter(str_detect(Player, regex(input$playerSelect, ignore_case = TRUE))) %>% 
       pull(Pos)
     df_new <- df_new %>% filter(Pos == pos_s) %>%
@@ -206,7 +208,7 @@ function(input, output){
                      rep('Goal Creating Actions', 2), rep('Defense', 4))) %>%
       mutate(Player = player_s) %>% mutate(Position = pos_s)
     return(df_new)
-  })
+  }) # main reactive data, tab 2 
   
   output$playerPlot <- renderPlot({
     validate(
@@ -232,22 +234,25 @@ function(input, output){
                                   Metric == 'Int' ~ 'Interceptions',
                                   Metric == 'Clr' ~ 'Clearances')) %>%
         ggplot(aes(x = fct_inorder(Metric), y = Percentile)) + 
-        geom_bar(stat = 'identity', aes(fill = Category), alpha = .7) +
+        geom_bar(stat = 'identity', aes(fill = Category), alpha = .8) +
         coord_polar() + theme_minimal() +
         theme(text = element_text(size = 18), legend.position = 'bottom',
+              legend.title = element_blank(),
               axis.text.y = element_blank()) +
         xlab('') + ylab('') +
         scale_fill_brewer(palette = 'Set1') +
         labs(title = react_data2() %>% pull(Player) %>% unique(),
              subtitle = paste0('Percentile among other ',
                                react_data2() %>% pull(Position) %>% unique(),
-                               ' - Premier League (2023-2024)'))
+                               ' - Premier League (2025-2026)'))
     if (input$showLabelPlayers == TRUE){
       q <- q + geom_text(aes(label = Percentile, y = Percentile + 3), 
                          size = 5)
     }
     print(q)
-  })
+  }) # player pizza chart
+  
+  #######################################################################
   
   react_data3 <- eventReactive(input$gkSelect, {
     df_gk <- lapply(url_gk, pull_xml_table)
@@ -258,9 +263,9 @@ function(input, output){
     df_gk2 <- df_gk[[1]] %>% inner_join(df_gk[[2]]) %>%
       mutate(across(-1, as.numeric)) %>%
       mutate(`PSxG - GA` = PSxG-GA)
-    df_gk2 <- df_gk2 %>% filter(`90s` >= 3)
+    df_gk2 <- df_gk2 %>% filter(`90s` >= 3) # require at least 3 x 90s to qualify
     return(df_gk2)
-  })
+  }) # main data, tab 3
   
   output$gkPlot <- renderPlot({
     if (input$gkSelect == 'PSxG - GA vs. SoTA vs. Save%'){
@@ -294,5 +299,5 @@ function(input, output){
              subtitle = 'Premier League Goalkeepers')
     }
     print(q)
-  })
+  }) # figure, tab 3
 }
